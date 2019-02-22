@@ -17,6 +17,7 @@ mongoose
 
 const authRoutes = require("./routes/authRoutes");
 const billingRoutes = require("./routes/billingRoutes");
+const surveyRoutes = require("./routes/surveyRoutes");
 const app = express();
 
 app.use(
@@ -32,6 +33,7 @@ app.use(bodyParser.json());
 
 authRoutes(app);
 billingRoutes(app);
+surveyRoutes(app);
 
 if (process.env.NODE_ENV === "production") {
   // express will serve up prod assets
