@@ -37,7 +37,7 @@ class Header extends Component {
             className="left brand-logo"
             href="/"
           >
-            Emaily
+            SurveyHawk
           </Link>
           <ul className="right">
             {/* <li>
