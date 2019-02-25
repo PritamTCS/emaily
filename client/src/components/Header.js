@@ -35,7 +35,6 @@ class Header extends Component {
           <Link
             to={this.props.auth ? "/surveys" : "/"}
             className="left brand-logo"
-            href="/"
           >
             SurveyHawk
           </Link>
