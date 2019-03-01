@@ -2,16 +2,34 @@
 
 import React, { Component } from "react";
 import { reduxForm, Field } from "redux-form";
+import { Link } from "react-router-dom";
 import SurveyField from "./SurveyField";
+
+const FIELDS = [
+  {
+    label: "Survey Title",
+    name: "title",
+    noValueError: "Please provide survey title"
+  },
+  {
+    label: "Subject Line",
+    name: "subject",
+    noValueError: "Please provide subject"
+  },
+  {
+    label: "Email Body",
+    name: "body",
+    noValueError: "Please provide email body"
+  },
+  {
+    label: "Recipient List",
+    name: "emails",
+    noValueError: "Please provide recipient email"
+  }
+];
 
 class SurveyForm extends Component {
   renderFields = () => {
-    const FIELDS = [
-      { label: "Survey Title", name: "Title" },
-      { label: "Subject Line", name: "subject" },
-      { label: "Email Body", name: "body" },
-      { label: "Recipient List", name: "emails" }
-    ];
     return FIELDS.map((field, index) => {
       return (
         <div key={field.name}>
@@ -59,14 +77,43 @@ class SurveyForm extends Component {
         <form onSubmit={this.props.handleSubmit(values => console.log(values))}>
           {/* <Field type="text" name="surveyTitle" component="input" /> */}
           {this.renderFields()}
-
-          <button type="submit">Submit</button>
+          <Link className="red btn-flat white-text" to="/surveys">
+            Cancel
+          </Link>
+          <button className="teal btn-flat right white-text" type="submit">
+            Next
+            <i className="material-icons right">done</i>
+          </button>
         </form>
       </div>
     );
   }
 }
 
+const validate = values => {
+  const errors = {};
+  // if (!values.title) {
+  //   errors.title = "You must provide a title";
+  // }
+
+  // if (!values.subject) {
+  //   errors.subject = "You must provide a subject";
+  // }
+
+  // if (!values.body) {
+  //   errors.body = "You must provide a body";
+  // }
+
+  FIELDS.forEach((field, index) => {
+    if (!values[field.name]) {
+      errors[field.name] = field.noValueError;
+    }
+  });
+
+  return errors;
+};
+
 export default reduxForm({
+  validate: validate,
   form: "surveyForm"
 })(SurveyForm);

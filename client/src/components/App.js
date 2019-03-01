@@ -17,18 +17,14 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="container">
-        <Router>
-          <div>
-            <Header />
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/surveys" component={Dashboard} />
-            <Route exact path="/surveys/new" component={SurveyNew} />
-          </div>
-        </Router>
-
-        {/* <a href="/auth/google">Sign in with Google</a> */}
-      </div>
+      <Router>
+        <div className="container">
+          <Header />
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/surveys" component={Dashboard} />
+          <Route exact path="/surveys/new" component={SurveyNew} />
+        </div>
+      </Router>
     );
   }
 }
