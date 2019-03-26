@@ -1,9 +1,13 @@
+// const _ = require("lodash");
+const Path = require("path-parser").default;
 const requireLogin = require("../middlewares/requireLogin");
 const requireCredits = require("../middlewares/requireCredits");
 const mongoose = require("mongoose");
 const Survey = mongoose.model("surveys");
 const Mailer = require("../services/Mailer");
 const surveyTemplate = require("../services/emailTemplates/surveyTemplate");
+// const Path = require("path-parser");
+const { URL } = require("url");
 
 module.exports = app => {
   app.get("/api/surveys/response", (req, res) => {
@@ -52,7 +56,12 @@ module.exports = app => {
   });
 
   app.post("/api/surveys/webhooks", (req, res) => {
-    console.log(req.body);
-    res.send({});
+    // console.log(req.body);
+    // res.send({});
+    const events = req.body.map(event => {
+      const pathname = new URL(event.url).pathname;
+      const p = new Path("/api/surveys/:surveyId/:choice");
+      console.log(p.test(pathname));
+    });
   });
 };
