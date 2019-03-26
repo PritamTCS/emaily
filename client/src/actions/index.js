@@ -22,3 +22,9 @@ export const handleToken = token => {
     });
   };
 };
+
+export const submitSurvey = formValues => {
+  return {
+    type: "submit_survey"
+  };
+};
