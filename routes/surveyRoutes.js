@@ -6,10 +6,9 @@ const Mailer = require("../services/Mailer");
 const surveyTemplate = require("../services/emailTemplates/surveyTemplate");
 
 module.exports = app => {
-  app.get('/api/surveys/response', (req, res) => {
-    res.send('Thanks for voting!');
+  app.get("/api/surveys/response", (req, res) => {
+    res.send("Thanks for voting!");
   });
-
 
   app.post("/api/surveys", requireLogin, requireCredits, (req, res) => {
     const { title, body, subject, recipients } = req.body;
@@ -39,10 +38,10 @@ module.exports = app => {
         // console.log(user);
         res.send(user);
       })
-    .catch(err => {
-      console.log(err);
-      res.status(422).send(err);
-    });
+      .catch(err => {
+        console.log(err);
+        res.status(422).send(err);
+      });
 
     // const mailer = new Mailer(survey, surveyTemplate(survey));
     // await mailer.send();
@@ -50,5 +49,10 @@ module.exports = app => {
     // req.user.credits -= 1;
     // const user = await req.user.save();
     // res.send(user);
+  });
+
+  app.post("/api/surveys/webhooks", (req, res) => {
+    console.log(req.body);
+    res.send({});
   });
 };
