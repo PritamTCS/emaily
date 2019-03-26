@@ -23,8 +23,14 @@ export const handleToken = token => {
   };
 };
 
-export const submitSurvey = formValues => {
-  return {
-    type: "submit_survey"
+export const submitSurvey = (formValues, history) => {
+  return dispatch => {
+    axios.post("/api/surveys", formValues).then(res => {
+      history.push("/surveys");
+      dispatch({
+        type: FETCH_USER,
+        payload: res.data
+      });
+    });
   };
 };

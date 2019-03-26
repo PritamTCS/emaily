@@ -106,7 +106,7 @@ const validate = values => {
   //   errors.body = "You must provide a body";
   // }
 
-  errors.emails = validateEmails(values.emails || "");
+  errors.recipients = validateEmails(values.recipients || "");
   formFields.forEach((field, index) => {
     if (!values[field.name]) {
       errors[field.name] = field.noValueError;
