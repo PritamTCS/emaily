@@ -9,7 +9,7 @@ const surveyTemplate = require("../services/emailTemplates/surveyTemplate");
 const { URL } = require("url");
 
 module.exports = app => {
-  app.get("/api/surveys/response", (req, res) => {
+  app.get("/api/surveys/:surveyId/:choice", (req, res) => {
     res.send("Thanks for voting!");
   });
 
@@ -55,24 +55,45 @@ module.exports = app => {
   });
 
   app.post("/api/surveys/webhooks", (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
+    const p = new Path("/api/surveys/:surveyId/:choice");
     // res.send({});
-    const events = req.body.map(event => {
-      const pathname = new URL(event.url).pathname;
-      const p = new Path("/api/surveys/:surveyId/:choice");
-      // console.log(p.test(pathname));
-      const match = p.test(pathname);
-      if (match) {
-        return {
-          email: event.email,
-          surveyId: match.surveyId,
-          choice: match.choice
-        };
-      }
-    });
-    const compactEvents = _.compact(events);
-    const UniqueEvents = _.uniqBy(compactEvents, "email", "surveyId");
-    console.log(UniqueEvents);
+    const events = _.chain(req.body)
+      .map(event => {
+        const pathname = new URL(event.url).pathname;
+
+        // console.log(p.test(pathname));
+        const match = p.test(pathname);
+        if (match) {
+          return {
+            email: event.email,
+            surveyId: match.surveyId,
+            choice: match.choice
+          };
+        }
+      })
+      .compact()
+      .uniqBy("email", "surveyId")
+      .each(event => {
+        Survey.updateOne(
+          {
+            _id: event.surveyId,
+            recipients: {
+              $elemMatch: {
+                email: event.email,
+                responded: false
+              }
+            }
+          },
+          {
+            $inc: { [event.choice]: 1 },
+            $set: { "recipients.$.responded": true },
+            lastResponded: new Date()
+          }
+        ).exec();
+      })
+      .value();
+    console.log(events);
     res.send({});
   });
 };
